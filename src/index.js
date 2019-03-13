@@ -176,22 +176,12 @@ function upperProps(obj) {
 function slice(array, from = 0, to = array.length) {
     let newArray = [];
 
-    if (from < 0 && Math.abs(from) > array.length) {
-        from = 0;
-    }
-    if (from < 0) {
-        from = array.length + from;
-    }
-    if (from > array.length) {
-        from = array.length;
-    }
+    from < 0 && Math.abs(from) > array.length ? from = 0 : '';
+    from < 0 ? from = array.length + from : '';
+    from > array.length ? from = array.length : '';
 
-    if (to < 0 && Math.abs(to) < array.length) {
-        to = array.length + to;
-    }
-    if (to > array.length) {
-        to = array.length;
-    }
+    to < 0 && Math.abs(to) < array.length ? to = array.length + to : '';
+    to > array.length ? to = array.length : '';
 
     for (let i = from; i < to; i++) {
         newArray.push(array[i]);
