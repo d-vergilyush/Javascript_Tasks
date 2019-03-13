@@ -15,7 +15,6 @@ returnFirstArgument('привет') вернет `привет`
 function returnFirstArgument(argument) {
     return argument;
 }
-returnFirstArgument(10);
 
 /*
 Задание 2:
@@ -34,7 +33,6 @@ sumWithDefaults(10) вернет 110
 function sumWithDefaults(a, b = 100) {
     return a + b;
 }
-sumWithDefaults(10);
 
 /*
 Задание 3:
@@ -47,7 +45,6 @@ returnFnResult(() => 'привет') вернет 'привет'
 function returnFnResult(fn) {
     return fn();
 }
-returnFnResult(() => 'привет');
 
 /*
 Задание 4:
@@ -65,7 +62,6 @@ console.log(f()); // выведет 13
 function returnCounter(number=0) {
     return () => ++number;
 }
-returnCounter(10);
 
 /*
 Задание 5 *:
@@ -79,7 +75,6 @@ returnArgumentsArray(1, 2, 3) вернет [1, 2, 3]
 function returnArgumentsArray() {
     return [].slice.call(arguments);
 }
-returnArgumentsArray(1, 2, 3);
 
 /*
 Задание 6 *:
@@ -99,10 +94,6 @@ console.log(newSum()) выведет 6
 function bindFunction(fn, ...args) {
     return () => fn(...args);
 }
-function sum(a, b) {
-    return a + b;
-}
-bindFunction(sum, 2, 4);
 
 /* ДЗ 2 - работа с массивами и объеектами */
 
@@ -165,13 +156,16 @@ function upperProps(obj) {
     let arr = [];
 
     for (let key in obj) {
-        key = key.toUpperCase();
-        arr.push(key);
+        if (obj.hasOwnProperty(key)) {
+            key = key.toUpperCase();
+            arr.push(key);
+        }
+        
     }
 
     return arr;
 }
-upperProps({ name: 'Сергей', lastName: 'Петров' });
+// upperProps({ name: 'Сергей', lastName: 'Петров' });
 
 /*
  Задание 5 *:
@@ -205,7 +199,6 @@ function slice(array, from = 0, to = array.length) {
 
     return newArray;
 }
-
 
 export {
     returnFirstArgument,
