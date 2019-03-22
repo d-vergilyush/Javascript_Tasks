@@ -52,7 +52,7 @@ function prepend(what, where) {
    findAllPSiblings(document.body) // функция должна вернуть массив с элементами div и span т.к. следующим соседом этих элементов является элемент с тегом P
  */
 function findAllPSiblings(where) {
-    let childs = where.children;
+    const childs = where.children;
     let allPSiblings =[];
 
     for (let i = 0; i < childs.length - 1; i++) {
@@ -172,16 +172,40 @@ function collectDOMStat(root) {
     let childs = root.childNodes;
 
     for (let child of childs) {
-
-        if (child.nodeType === 3) {
-            stat.texts++;
+        
+        if (checkTextNode(child)) {
             continue;
         }
 
-        let itemClassList = child.classList;
+        CheckElemClasses(child);
+        
+        CheckElemTag(child);
+
+        let nested = collectDOMStat(child);
+
+        if (Object.keys(nested.tags).length > 0) {
+            checkDuplication(nested.tags, stat.tags);
+        }
+        
+        if (Object.keys(nested.classes).length > 0) {
+            checkDuplication(nested.classes, stat.classes);
+        }
+
+        if (nested.texts > 0 ) {
+            stat.texts += nested.texts;
+        }
+    }
+
+    function checkTextNode(node) {
+        if (node.nodeType === 3) {
+            stat.texts++;
+        }
+    }
+
+    function CheckElemClasses(node) {
+        let itemClassList = node.classList;
 
         if (itemClassList && itemClassList.length > 0) {
-
             for (let itemClass of itemClassList) {
                 if (stat.classes.hasOwnProperty(itemClass)) {
                     stat.classes[itemClass]++;
@@ -190,35 +214,27 @@ function collectDOMStat(root) {
                 }
             }
         }
-        if (child.tagName) {
+    }
 
-            if (stat.tags.hasOwnProperty(child.tagName)) {
-                stat.tags[child.tagName]++;
+    function CheckElemTag(node) {
+        if (node.tagName) {
+            if (stat.tags.hasOwnProperty(node.tagName)) {
+                stat.tags[node.tagName]++;
             } else {
-                stat.tags[child.tagName] = 1;
+                stat.tags[node.tagName] = 1;
             }
-
         }
-        
-        const checkDuplication = function(childObjCat, parentObjCat) {
-            for (let key in childObjCat) {
-                
-                if (parentObjCat.hasOwnProperty(key)) {
-                    parentObjCat[key] += childObjCat[key];
-                } else {
-                    parentObjCat[key] = childObjCat[key];
-                }
-                
+    }
+
+    function checkDuplication(childObjCat, parentObjCat) {
+        for (let key in childObjCat) {
+
+            if (parentObjCat.hasOwnProperty(key)) {
+                parentObjCat[key] += childObjCat[key];
+            } else {
+                parentObjCat[key] = childObjCat[key];
             }
-        };
 
-        let nested = collectDOMStat(child);
-        
-        checkDuplication(nested.tags, stat.tags);
-        checkDuplication(nested.classes, stat.classes);
-
-        if (nested.texts > 0 ) {
-            stat.texts += nested.texts;
         }
     }
 
